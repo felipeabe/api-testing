@@ -1,0 +1,15 @@
+package felipeAbe.api_testing;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.openfeign.EnableFeignClients;
+
+@SpringBootApplication
+@EnableFeignClients
+public class ApiTestingApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(ApiTestingApplication.class, args);
+	}
+
+}
