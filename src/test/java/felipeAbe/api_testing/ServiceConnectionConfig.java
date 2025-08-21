@@ -12,7 +12,7 @@ import org.testcontainers.utility.DockerImageName;
 import java.util.List;
 
 @TestConfiguration(proxyBeanMethods = false)
-class ServiceConnectionConfig{
+public class ServiceConnectionConfig{
 
 
 	@Bean

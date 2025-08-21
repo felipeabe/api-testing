@@ -18,15 +18,14 @@ public class ContainerConfig {
             new WireMockContainer("wiremock/wiremock:3.12.1")
                     .withCopyToContainer(MountableFile.forClasspathResource("wiremock"),"/home/wiremock");
 
-    public static Map<String, String> getProperties(){
+    public static Map<String, String> getProperties() {
         return Map.of(
-                "partner.api.url","",
-                "telemetry.api.url",""
+                "partner.api.url", getWireMockUrl(),
+                "telemetry.api.url", getWireMockUrl()
         );
     }
-
     @DynamicPropertySource
-    public void dynamicPropertySource(DynamicPropertyRegistry registry){
+    public static void dynamicPropertySource(DynamicPropertyRegistry registry){
         WireMock.configureFor(wireMockContainer.getHost(), wireMockContainer.getPort());
 
         getProperties().entrySet().forEach(kv->{
@@ -34,7 +33,7 @@ public class ContainerConfig {
         });
     }
 
-    public String getWireMockUrl(){
+    public static String getWireMockUrl(){
         return"http://"+wireMockContainer.getHost()+":"+wireMockContainer.getFirstMappedPort();
     }
 
