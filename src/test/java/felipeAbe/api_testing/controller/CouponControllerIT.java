@@ -138,6 +138,53 @@ public class CouponControllerIT extends ContainerConfig {
 
             }
         }
+
+        @Nested
+        class invalidCouponScenarios{
+            String notFoundCouponCode="NOTFOUND";
+            String expiredCOuponCode="EXPIRE50";
+            int discountPercentage=0;
+            int remainingUsages=0;
+            LocalDateTime validUntil=LocalDateTime.now().minusDays(7);
+
+
+            private ResultActions setupArrangeAct(String coupon) throws Exception {
+                //arrange
+                couponRepository.save(new Coupon(coupon, discountPercentage, remainingUsages, validUntil));
+
+                //act
+                var result=mockMvc.perform(
+                        post("/api/v1/coupons/validate")
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .content(String.format("""
+                                        {
+                                            "couponCode": "%s"
+                                        }
+                                        """, coupon))
+                );
+                return result;
+            }
+
+            @Test
+            void whenCouponNotFoundOnDatabaseShouldReturn404() throws Exception {
+                var result=mockMvc.perform(
+                        post("/api/v1/coupons/validate")
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .content(String.format("""
+                                        {
+                                            "couponCode": "%s"
+                                        }
+                                        """, notFoundCouponCode))
+                );
+
+                //assert
+                var resp=result.andExpect(status().is(404))
+                        .andReturn();
+                assertTrue(resp.getResponse().getContentAsString().isBlank());
+            }
+
+
+        }
     }
 
 }
